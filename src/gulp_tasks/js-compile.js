@@ -7,6 +7,7 @@ gulp.task('js-compile', ['js-clean'], function () {
     'use strict';
     return gulp.src(config.js.src)
         .pipe(plugins.concat(config.js.destFileName))
+        .pipe(gulp.dest(config.js.dest))
         .pipe(plugins.rename({suffix: '.min'}))
         .pipe(plugins.uglify(null))
         .pipe(gulp.dest(config.js.dest))
