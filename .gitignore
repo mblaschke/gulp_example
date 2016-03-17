@@ -11,6 +11,6 @@
 /web/index.php
 
 /src/node_modules
-/src/js/bower-components
+/src/js/bower_components
 
 /vendor/
