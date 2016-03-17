@@ -3,9 +3,8 @@
 .project
 
 /web/typo3conf/*.log
-
+/web/typo3conf/ENABLE_INSTALL_TOOL
 /web/build/
-
 /web/typo3
 /web/index.php
 
