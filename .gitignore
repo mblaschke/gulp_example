@@ -1,0 +1,16 @@
+.DS_Store
+.idea
+.project
+
+/web/typo3conf/ext/
+/web/typo3conf/*.log
+
+/web/build/
+
+/web/typo3
+/web/index.php
+
+/src/node_modules
+/src/js/bower-components
+
+/vendor/

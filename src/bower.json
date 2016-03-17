@@ -1,0 +1,6 @@
+{
+    "name": "Gulp Example for TYPO3",
+    "dependencies": {
+        "bootstrap": "^3.3"
+    }
+}

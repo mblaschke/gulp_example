@@ -1,0 +1,180 @@
+
+### Begin: Compression via TYPO3 ###
+
+<FilesMatch "\.js\.gzip$">
+	AddType "text/javascript" .gzip
+</FilesMatch>
+<FilesMatch "\.css\.gzip$">
+	AddType "text/css" .gzip
+</FilesMatch>
+AddEncoding gzip .gzip
+
+<FilesMatch "\.gz">
+	<IfModule mod_headers.c>
+		Header set Content-Encoding gzip
+	</IfModule>
+</FilesMatch>
+<FilesMatch "\.html\.gz">
+	ForceType text/html
+</FilesMatch>
+<FilesMatch "\.(xml|rss)\.gz">
+	ForceType text/xml
+</FilesMatch>
+
+### End: Compression via TYPO3 ###
+
+### Begin: Serverside compression ###
+
+<IfModule mod_deflate.c>
+ AddOutputFilterByType DEFLATE text/plain
+ AddOutputFilterByType DEFLATE text/html
+ AddOutputFilterByType DEFLATE text/xml
+ AddOutputFilterByType DEFLATE text/css
+ AddOutputFilterByType DEFLATE text/javascript
+ AddOutputFilterByType DEFLATE application/xml
+ AddOutputFilterByType DEFLATE application/xhtml+xml
+ AddOutputFilterByType DEFLATE application/rss+xml
+ AddOutputFilterByType DEFLATE application/atom_xml
+ AddOutputFilterByType DEFLATE application/javascript
+ AddOutputFilterByType DEFLATE application/x-javascript
+ AddOutputFilterByType DEFLATE application/x-shockwave-flash
+</IfModule>
+
+### End: Serverside compression ###
+
+### Begin: Browser caching of ressource files ###
+
+<FilesMatch "\.(js|css)$">
+  <IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault "access plus 7 days"
+  </IfModule>
+  FileETag MTime Size
+</FilesMatch>
+
+<IfModule mod_headers.c>
+	FileETag Size
+
+	Header set X-UA-Compatible "IE=Edge,chrome=1"
+	# mod_headers can't match by content-type, but we don't want to send this header on *everything*...
+	<FilesMatch "\.(js|css|gif|png|jpe?g|pdf|xml|oga|ogg|m4a|ogv|mp4|m4v|webm|svg|svgz|eot|ttf|otf|woff|ico|webp|appcache|manifest|htc|crx|oex|xpi|safariextz|vcf)$" >
+		Header unset X-UA-Compatible
+	</FilesMatch>
+</IfModule>
+<IfModule mod_expires.c>
+	# Turn on Expires and set default to 0
+	ExpiresActive On
+	ExpiresDefault A0
+
+	# Set up caching on media files for 1 year (forever?)
+	<FilesMatch "\.(flv|ico|pdf|avi|mov|ppt|doc|mp3|wmv|wav)$">
+		ExpiresDefault A29030400
+		Header append Cache-Control "public"
+	</FilesMatch>
+
+	# Set up caching on media files for 1 week
+	<FilesMatch "\.(gif|jpg|jpeg|png|swf)$">
+		ExpiresDefault A604800
+		Header append Cache-Control "public"
+	</FilesMatch>
+
+	# Set up 2 Hour caching on commonly updated files
+	<FilesMatch "\.(xml|txt)$">
+		ExpiresDefault A7200
+		Header append Cache-Control "proxy-revalidate"
+	</FilesMatch>
+	<FilesMatch "\.(js|css|js\.gzip|css\.gzip)$">
+		ExpiresDefault A604800
+		Header append Cache-Control "proxy-revalidate"
+	</FilesMatch>
+
+	# Force no caching for dynamic files
+	<FilesMatch "\.(php|cgi|pl|htm|html)$">
+		ExpiresActive Off
+		Header set Cache-Control "private, no-cache, no-store, proxy-revalidate, no-transform"
+		Header set Pragma "no-cache"
+	</FilesMatch>
+</IfModule>
+### End: Browser caching of ressource files ###
+
+
+### Begin: Settings for mod_rewrite ###
+
+# You need rewriting, if you use a URL-Rewriting extension (RealURL, CoolUri).
+
+<IfModule mod_rewrite.c>
+	# Enable URL rewriting
+	RewriteEngine On
+
+	# Change this path, if your TYPO3 installation is located in a subdirectory of the website root.
+	RewriteBase /
+
+	# Rule for versioned static files, configured through:
+	# - $TYPO3_CONF_VARS['BE']['versionNumberInFilename']
+	# - $TYPO3_CONF_VARS['FE']['versionNumberInFilename']
+	# IMPORTANT: This rule has to be the very first RewriteCond in order to work!
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.+)\.(\d+)\.(php|js|css|png|jpg|gif|gzip)$ $1.$3 [L]
+
+	# Basic security checks
+	# - Restrict access to deleted files in Recycler directories
+	# - Restrict access to TypoScript files in default templates directories
+	# - Restrict access to Private extension directories
+	# For httpd.conf, use these lines instead of the next ones:
+	# RewriteRule ^/TYPO3root/fileadmin/(.*/)?_recycler_/ - [F]
+	# RewriteRule ^/TYPO3root/fileadmin/templates/.*(\.txt|\.ts)$ - [F]
+	# RewriteRule ^/TYPO3root/typo3conf/ext/[^/]+/Resources/Private/ - [F]
+	RewriteRule ^fileadmin/(.*/)?_recycler_/ - [F]
+	RewriteRule ^fileadmin/templates/.*(\.txt|\.ts)$ - [F]
+	RewriteRule ^typo3conf/ext/[^/]+/Resources/Private/ - [F]
+
+	# LIGHTWERK checks
+	RewriteRule .*\.git/.* - [F,NC]
+	RewriteRule .*\.svn/.* - [F,NC]
+	RewriteRule .*/Resources/Private/.* - [F,NC]
+	RewriteRule .*/ts/.* - [F,NC]
+	RewriteRule .*/Configuration/TypoScript/.* - [F,NC]
+	RewriteRule .*/ext_typoscript.* - [F,NC]
+	RewriteRule .*/ext_conf_template.* - [F,NC]
+	RewriteRule .*/static/.*\.txt - [F,NC]
+	RewriteRule .*\.sql.* - [F,NC]
+
+	# Stop rewrite processing, if we are in the typo3/ directory.
+	# For httpd.conf, use this line instead of the next one:
+	# RewriteRule ^/TYPO3root/(typo3/|fileadmin/|typo3conf/|typo3temp/|uploads/|favicon\.ico) - [L]
+	RewriteRule ^(typo3/|fileadmin/|typo3conf/|typo3temp/|uploads/|favicon\.ico) - [L]
+
+	# If the file/symlink/directory does not exist => Redirect to index.php.
+	# For httpd.conf, you need to prefix each '%{REQUEST_FILENAME}' with '%{DOCUMENT_ROOT}'.
+	RewriteCond %{REQUEST_FILENAME} -f [OR]
+	RewriteCond %{REQUEST_FILENAME} -d [OR]
+	RewriteCond %{REQUEST_FILENAME} -l
+	RewriteRule .* - [L]
+
+	# Main URL rewriting.
+	# For httpd.conf, use this line instead of the next one:
+	# RewriteRule .* /TYPO3root/index.php [L]
+	RewriteRule .* index.php [L]
+</IfModule>
+
+### End: Settings for mod_rewrite ###
+
+
+### Begin: PHP optimisation ###
+
+# If you do not change the following settings, the default values will be used.
+
+# TYPO3 works fine with register_globals turned off.
+# This is highly recommended, if your web server has it turned on.
+#php_flag register_globals off
+
+### End: PHP optimisation ###
+
+
+### Begin: Miscellaneous ###
+
+# Make sure that directory listings are disabled.
+Options -Indexes
+
+### End: Miscellaneous ###
