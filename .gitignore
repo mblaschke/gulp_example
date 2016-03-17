@@ -2,7 +2,6 @@
 .idea
 .project
 
-/web/typo3conf/ext/
 /web/typo3conf/*.log
 
 /web/build/

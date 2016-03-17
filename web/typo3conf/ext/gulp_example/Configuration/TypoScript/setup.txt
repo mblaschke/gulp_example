@@ -1,0 +1,38 @@
+config {
+    disablePrefixComment = 1
+    doctype = html5
+    debug = 0
+    removeDefaultJS = 1
+    spamProtectEmailAddresses = -3
+    sys_language_mode = strict
+    linkVars = L
+    uniqueLinkVars = 1
+    sys_language_uid = 0
+    language = en
+    locale_all = en_US
+    htmlTag_dir = ltr
+    htmlTag_langKey = en-US
+}
+
+page = PAGE
+page {
+    10 = FLUIDTEMPLATE
+    10 {
+        templateName = LandingPage
+        layoutRootPaths {
+            10 = EXT:gulp_example/Resources/Private/Layouts
+        }
+        partialRootPaths {
+            10 = EXT:gulp_example/Resources/Private/Partials
+        }
+        templateRootPaths {
+            10 = EXT:gulp_example/Resources/Private/Templates
+        }
+    }
+    includeJSFooter.gulp = /build/js/footer.min.js
+    includeCSS.gulp = /build/css/main.min.css
+}
+
+[applicationContext = Development*]
+page.includeJSFooter.gulp = /build/js/footer.js
+[end]
