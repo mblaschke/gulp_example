@@ -1,5 +1,7 @@
 all: deploy
 
+build: deploy
+
 deploy:
 	composer install --no-dev --ignore-platform-reqs
 	sh -c "cd src ; npm install"
