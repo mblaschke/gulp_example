@@ -4,9 +4,11 @@
 
 /web/typo3conf/*.log
 /web/typo3conf/ENABLE_INSTALL_TOOL
+/web/typo3conf/ext/*
 /web/build/
 /web/typo3
 /web/index.php
+/typo3cms
 
 /src/node_modules
 /src/resources/bower_components

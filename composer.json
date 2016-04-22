@@ -6,7 +6,12 @@
   "description" : "A TYPO3 7 LTS example project with gulp.",
   "license": "GPL-2.0+",
   "require": {
-    "typo3/cms": "^7.6"
+    "typo3/cms": "^7.6",
+    "typo3-ter/typo3-console": "^1.3"
+  },        
+  "scripts": {
+    "post-update-cmd": "Helhum\\Typo3Console\\Composer\\InstallerScripts::postUpdateAndInstall",
+    "post-install-cmd": "Helhum\\Typo3Console\\Composer\\InstallerScripts::postUpdateAndInstall"
   },
   "extra": {
     "typo3/cms": {
