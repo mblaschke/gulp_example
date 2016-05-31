@@ -338,7 +338,7 @@ return [
             'packagePath' => 'typo3/sysext/workspaces/',
             'suggestions' => [],
         ],
-        'workspaces' => [
+        'typo3_console' => [
             'composerName' => 'typo3/typo3-console',
             'state' => 'active',
             'packagePath' => 'typo3conf/ext/typo3_console/',
