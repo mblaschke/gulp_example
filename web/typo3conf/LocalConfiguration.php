@@ -7,11 +7,12 @@ return [
         'loginSecurityLevel' => 'rsa',
     ],
     'DB' => [
-        'database' => 'gulp_example',
-        'host' => 'localhost',
-        'password' => '',
+        'database' => 'typo3',
+        'host' => '127.0.0.1',
+        'port' => '13306'
+        'password' => 'dev',
         'socket' => '',
-        'username' => 'root',
+        'username' => 'dev',
     ],
     'EXT' => [
         'extConf' => [
