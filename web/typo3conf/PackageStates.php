@@ -338,6 +338,12 @@ return [
             'packagePath' => 'typo3/sysext/workspaces/',
             'suggestions' => [],
         ],
+        'workspaces' => [
+            'composerName' => 'typo3/typo3-console',
+            'state' => 'active',
+            'packagePath' => 'typo3/sysext/typo3_console/',
+            'suggestions' => [],
+        ],
     ],
     'version' => 4,
 ];
